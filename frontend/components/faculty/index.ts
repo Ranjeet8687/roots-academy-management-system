@@ -1,0 +1,1 @@
+export { Faculty } from "./Faculty";
