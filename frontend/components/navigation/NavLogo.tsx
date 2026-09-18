@@ -28,15 +28,15 @@ export function NavLogo({
         className
       )}
     >
-      {/* Full JEE NEET logo */}
+      {/* Full JEE NEET logo - responsive sizing */}
       <span
         className={cn(
           "relative flex shrink-0 items-center justify-center",
           isCompact
-            ? "h-10 w-20"
+            ? "h-8 w-16 sm:h-10 sm:w-20"
             : isFooter
               ? "h-16 w-32"
-              : "h-14 w-28"
+              : "h-10 w-20 sm:h-14 sm:w-28"
         )}
       >
         <Image
@@ -45,16 +45,17 @@ export function NavLogo({
           fill
           priority
           className="object-contain"
-          sizes="(max-width: 640px) 80px, 112px"
+          sizes="(max-width: 640px) 64px, 112px"
         />
       </span>
 
-      <div className="flex flex-col leading-tight">
+      {/* Branding text container - allows truncation on small screens */}
+      <div className="min-w-0 flex flex-col leading-tight overflow-hidden">
         <span
           className={cn(
-            "font-semibold tracking-[-0.01em]",
-            isCompact && "text-[15px]",
-            !isCompact && !isFooter && "text-[17px]",
+            "font-semibold tracking-[-0.01em] truncate",
+            isCompact && "text-[14px] sm:text-[15px]",
+            !isCompact && !isFooter && "text-[15px] sm:text-[17px]",
             isFooter && "text-[18px]"
           )}
           style={{ color: "var(--color-text-primary)" }}
@@ -65,8 +66,8 @@ export function NavLogo({
         {!isCompact && (
           <span
             className={cn(
-              "font-medium tracking-wide uppercase",
-              !isFooter && "text-[10px]",
+              "font-medium tracking-wide uppercase truncate",
+              !isFooter && "text-[9px] sm:text-[10px]",
               isFooter && "text-[11px]"
             )}
             style={{ color: "var(--color-primary)" }}

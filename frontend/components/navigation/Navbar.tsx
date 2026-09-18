@@ -62,32 +62,37 @@ export function Navbar() {
         }}
       >
         <Container>
-          <div className="flex h-[var(--header-height)] items-center justify-between">
-            <NavLogo />
-
-            <DesktopNav
-              items={NAV_ITEMS}
-              activePath={activeSection}
-            />
-            <div className="flex items-center gap-2">
-              <NavActions className="hidden md:flex" />
-
-              <button
-                type="button"
-                onClick={() => setIsMobileOpen(true)}
-                aria-label="Open menu"
-                aria-expanded={isMobileOpen}
-                aria-controls="mobile-navigation"
-                className={cn(
-                  "inline-flex items-center justify-center rounded-[var(--radius-md)] p-2 md:hidden",
-                  "transition-colors duration-200",
-                  "hover:bg-[var(--color-surface)]",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
-                )}
-              >
-                <Menu className="h-5 w-5" style={{ color: "var(--color-text-primary)" }} />
-              </button>
+          <div className="flex h-[var(--header-height)] items-center justify-between gap-2">
+            {/* Branding - takes available space, allows truncation */}
+            <div className="min-w-0 flex-1">
+              <NavLogo />
             </div>
+
+            {/* Desktop navigation and actions */}
+            <div className="flex items-center gap-2 shrink-0">
+              <DesktopNav
+                items={NAV_ITEMS}
+                activePath={activeSection}
+              />
+              <NavActions className="hidden md:flex" />
+            </div>
+
+            {/* Mobile hamburger button - always shrink-0, visible only on mobile */}
+            <button
+              type="button"
+              onClick={() => setIsMobileOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={isMobileOpen}
+              aria-controls="mobile-navigation"
+              className={cn(
+                "inline-flex items-center justify-center rounded-[var(--radius-md)] p-2 md:hidden shrink-0",
+                "transition-colors duration-200",
+                "hover:bg-[var(--color-surface)]",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
+              )}
+            >
+              <Menu className="h-5 w-5 text-foreground" />
+            </button>
           </div>
         </Container>
       </div>

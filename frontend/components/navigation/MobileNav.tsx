@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
+import { X, LogIn, UserPlus, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NAV_CTA } from "./navigation.data";
+import { useAuth } from "@/lib/auth-context";
 import type { MobileNavProps } from "./navigation.types";
 
 /**
  * MobileNav
  * Slide-in drawer for sub-md viewports.
  * Highlights the currently active section.
+ * Includes authentication actions for unauthenticated users.
  */
 export function MobileNav({
   items,
@@ -18,6 +20,8 @@ export function MobileNav({
   isOpen,
   onClose,
 }: MobileNavProps) {
+  const { isAuthenticated, loading, user, logout } = useAuth();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -86,7 +90,7 @@ export function MobileNav({
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
                 )}
               >
-                <X className="h-5 w-5" style={{ color: "var(--color-text-primary)" }} />
+                <X className="h-5 w-5 text-foreground" />
               </button>
             </div>
 
@@ -127,8 +131,87 @@ export function MobileNav({
               })}
             </nav>
 
+            {/* Authentication Actions */}
             <div
-              className="mt-auto px-5 pb-5 pt-4"
+              className="px-5 pb-5 pt-4"
+              style={{
+                borderTop: "1px solid var(--color-border)",
+              }}
+            >
+              {loading ? (
+                <div className="flex flex-col gap-3">
+                  <div className="h-12 w-full animate-pulse rounded-[var(--radius-md)] bg-[var(--color-surface)]" />
+                  <div className="h-12 w-full animate-pulse rounded-[var(--radius-md)] bg-[var(--color-surface)]" />
+                </div>
+              ) : !isAuthenticated ? (
+                <div className="flex flex-col gap-3">
+                  <Link
+                    href="/login"
+                    onClick={onClose}
+                    className={cn(
+                      "flex w-full items-center justify-center gap-2",
+                      "rounded-[var(--radius-md)] px-4 py-3.5",
+                      "text-[15px] font-semibold",
+                      "bg-[var(--color-surface)]",
+                      "text-[var(--color-text-primary)]",
+                      "border border-[var(--color-border)]",
+                      "transition-all duration-200",
+                      "hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-primary)]",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2"
+                    )}
+                  >
+                    <LogIn className="h-5 w-5" aria-hidden="true" />
+                    <span>Login</span>
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={onClose}
+                    className={cn(
+                      "flex w-full items-center justify-center gap-2",
+                      "rounded-[var(--radius-md)] px-4 py-3.5",
+                      "text-[15px] font-semibold text-white",
+                      "bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-700)]",
+                      "shadow-[var(--shadow-button)]",
+                      "transition-all duration-200",
+                      "hover:shadow-[var(--shadow-button-hover)] hover:-translate-y-0.5",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2"
+                    )}
+                  >
+                    <UserPlus className="h-5 w-5" aria-hidden="true" />
+                    <span>Register</span>
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  <span className="px-1 text-sm font-medium text-[var(--color-text-secondary)]">
+                    {user?.email}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await logout();
+                      onClose();
+                    }}
+                    className={cn(
+                      "flex w-full items-center justify-center gap-2",
+                      "rounded-[var(--radius-md)] px-4 py-3.5",
+                      "text-[15px] font-semibold text-destructive",
+                      "bg-destructive/10",
+                      "border border-destructive/20",
+                      "transition-all duration-200",
+                      "hover:bg-destructive/20",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2"
+                    )}
+                  >
+                    <LogOut className="h-5 w-5" aria-hidden="true" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div
+              className="px-5 pb-5 pt-4"
               style={{
                 borderTop: "1px solid var(--color-border)",
               }}
